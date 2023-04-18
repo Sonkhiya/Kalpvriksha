@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_SIZE 100
+
+typedef struct {
+    char *data[MAX_SIZE];
+    int top;
+} Stack;
+
+void initialize(Stack *stack) {
+    stack->top = -1;
+}
+
+int is_empty(Stack *stack) {
+    return stack->top == -1;
+}
+
+int is_full(Stack *stack) {
+    return stack->top == MAX_SIZE - 1;
+}
+
+void push(Stack *stack, char *item) {
+    if (is_full(stack)) {
+        printf("Error: stack overflow\n");
+    }
+    stack->top++;
+    stack->data[stack->top] = item;
+}
+
+char *pop(Stack *stack) {
+    if (is_empty(stack)) {
+        printf("Error: stack underflow\n");
+      
+    }
+    char *item = stack->data[stack->top];
+    stack->top--;
+    return item;
+}
+
+void reverse_sentence(char *sentence) {
+    Stack stack;
+    initialize(&stack);
+    char *token = strtok(sentence, " ");
+    while (token != NULL) {
+        push(&stack, token);
+        token = strtok(NULL, " ");
+    }
+    while (!is_empty(&stack)) {
+        printf("%s ", pop(&stack));
+    }
+    printf("\n");
+}
+
+int main() {
+    char sentence[] = "I am aryan";
+    printf("Original sentence: %s\n", sentence);
+    printf("Reversed sentence: ");
+    reverse_sentence(sentence);
+    return 0;
+}

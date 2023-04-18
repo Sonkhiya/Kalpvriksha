@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+typedef struct Node_t
+{
+    int data;
+    //char *name;
+    struct Node_t *next;
+}node;
+
+typedef struct linkedlist_t
+{
+    node *head, *tail;
+}linked_list;
+
+void push(linked_list *list, int data)
+{
+    node *new_node = malloc(sizeof(node));
+    new_node->data = data;
+   // new_node->name = malloc(sizeof(char) * (strlen(name) + 1));
+   // strcpy(new_node->name, name);
+    
+    if(list->head == NULL)
+    {
+        list->head = new_node;
+        new_node->next = NULL;
+    }
+    
+    else
+    {
+        node *temp = list->head;
+        while(temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        
+        temp->next = new_node;
+        new_node->next = NULL;
+    }
+}
+
+void stringToInt(linked_list *list, char str[])
+{
+    scanf("%s", str);
+    
+    for(int i = 0; i<strlen(str); i++)
+    {
+        int value = 0;
+        if(isdigit(str[i]))
+        {
+            value = value * 10 + str[i] - '0';
+            push(list, value);
+        }
+    }
+}
+
+void display(linked_list *list)
+{
+    node *temp = list->head;
+    while(temp != NULL)
+    {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+}
+
+int main()
+{
+    linked_list *list = malloc(sizeof(linked_list));
+    (list)->head = NULL;
+    (list)->tail = NULL;
+    
+    char str[30];
+    //{1,2,3};
+    scanf("%[;]", str);
+    
+    stringToInt(list, str);
+    
+    //push(list, value);
+    //push(list, 2, new_str);
+    //push(list, 3, new_str);
+    //push(list, 4, new_str);
+    
+    display(list);    
+    
+    return 0;
+}
