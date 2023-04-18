@@ -1,0 +1,14 @@
+#include <stdio.h>
+
+int main()
+{
+    char str[100];
+    char str2[100];
+    
+    //scanf("%[^\n]", str);
+    //scanf("%[^ \n]", str2);
+
+    printf("%s %s", str, str2);
+
+    return 0;
+}
