@@ -1,0 +1,113 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node
+{
+    int value;
+    struct Node *left, *right;
+}Node;
+
+Node* insert(Node *tnode, int value)
+{
+    if(tnode == NULL)
+    {
+        tnode = malloc(sizeof(Node));
+        tnode->value = value;
+        tnode->left = NULL;
+        tnode->right = NULL;
+    }
+
+    else if(value < tnode->value)
+    {
+        tnode->left = insert(tnode->left, value);
+    }
+    else
+    {
+        tnode->right = insert(tnode->right, value);
+    }
+
+    return tnode;
+}
+
+void inorder(Node *tnode)
+{
+    if(tnode == NULL)
+    {
+        return;
+    }
+    
+    inorder(tnode->left);
+    printf("%d ", tnode->value);
+    inorder(tnode->right);
+}
+
+void preorder(Node *tnode)
+{
+    if(tnode == NULL)
+    {
+        return;
+    }
+    
+    printf("%d ", tnode->value);
+    preorder(tnode->left);
+    preorder(tnode->right);
+}
+
+void postorder(Node *tnode)
+{
+    if(tnode == NULL)
+    {
+        return;
+    }
+    
+    postorder(tnode->left);
+    postorder(tnode->right);
+    printf("%d ", tnode->value);
+}
+
+Node* search(Node *tnode, int value)
+{
+    if(tnode == NULL || tnode->value == value)
+    {
+        return tnode;
+    }
+    else if(value < tnode->value)
+    {
+        return search(tnode->left, value);
+    }
+    
+    else
+    {
+        return search(tnode->right, value);
+    }
+    
+}
+
+int main()
+{
+    Node *tnode = NULL;
+    int num, value;
+    scanf("%d", &num);
+    for(int i = 0; i< num; i++)
+    {
+        scanf("%d", &value);
+        tnode = insert(tnode, value);
+    }
+
+    inorder(tnode);  
+    
+    int svalue;
+    scanf("%d", &svalue);
+    Node *result = search(tnode, svalue);
+    
+    if(result == NULL)
+    {
+        printf("value not found");
+    }
+    else
+    {
+        printf("value found");
+    }
+
+    return 0;
+}
