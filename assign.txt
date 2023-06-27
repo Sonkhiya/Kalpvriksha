@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Node {
+    char data[10];
+    struct Node* left;
+    struct Node* right;
+};
+
+struct Node* node(const char* data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    strcpy(newNode->data, data);
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+void pathf(struct Node* root, const char* value, char** path, int* length) {
+    if (root == NULL)
+        return;
+
+    strcpy(path[*length], root->data);
+    (*length)++;
+
+    if (strcmp(root->data, value) == 0) {
+        return;
+    }
+
+    pathf(root->left, value, path, length);
+    pathf(root->right, value, path, length);
+
+    if (strcmp(path[*length - 1], value) != 0) {
+        (*length)--;
+    }
+}
+int main() {
+    struct Node* root = node("Bangalore");
+
+    root->left = node("Bangalore East");
+    root->right = node("Bangalore West");
+
+    root->left->left = node("C");
+    root->left->right = node("D");
+    root->right->left = node("A");
+    root->right->right = node("B");
+
+    root->right->left->left = node("56001");
+    root->right->left->right = node("56002");
+    root->right->right->left = node("56003");
+    root->right->right->right = node("56004");
+    root->left->left->left = node("56005");
+    root->left->left->right = node("56006");
+    root->left->right->left = node("56007");
+    root->left->right->right = node("56008");
+
+    char val[2][10];
+    printf("Enter region code 1: ");
+    scanf("%s", val[0]);
+    printf("Enter region code 2: ");
+    scanf("%s", val[1]);
+
+    char* path[2][10];
+    int l[2] = {0};
+
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 10; j++) {
+            path[i][j] = (char*)malloc(10 * sizeof(char));
+        }
+    }
+
+    for (int i = 0; i < 2; i++) {
+        pathf(root, val[i], path[i], &l[i]);
+        printf("Path for %s: ", val[i]);
+        for (int j = 0; j < l[i]; j++) {
+            printf("%s", path[i][j]);
+            if (j != l[i] - 1) {
+                printf(", ");
+            }
+        }
+        printf("\n");
+    }
+}
