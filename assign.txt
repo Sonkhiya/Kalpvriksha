@@ -9,36 +9,67 @@ struct Node {
 };
 
 struct Node* node(const char* data) {
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    strcpy(newNode->data, data);
-    newNode->left = NULL;
-    newNode->right = NULL;
-    return newNode;
+    struct Node* new = (struct Node*)malloc(sizeof(struct Node));
+    strcpy(new->data, data);
+    new->left = NULL;
+    new->right = NULL;
+    return new;
 }
 
-void pathf(struct Node* root, const char* value, char** path, int* length) {
+int pathf(struct Node* root, const char* value, char** path, int index) {
     if (root == NULL)
-        return;
+        return 0;
 
-    strcpy(path[*length], root->data);
-    (*length)++;
-
+    strcpy(path[index], root->data);
     if (strcmp(root->data, value) == 0) {
-        return;
+        return 1;
     }
 
-    pathf(root->left, value, path, length);
-    pathf(root->right, value, path, length);
-
-    if (strcmp(path[*length - 1], value) != 0) {
-        (*length)--;
+    if (pathf(root->left, value, path, index + 1) ||
+        pathf(root->right, value, path, index + 1)) {
+        return 1;
     }
+
+    path[index][0] = '\0';
+    return 0;
 }
+
+void pathc(struct Node* root, const char* val1, const char* val2) {
+    char* path1[10];
+    char* path2[10];
+
+    for (int i = 0; i < 10; i++) {
+        path1[i] = (char*)malloc(10 * sizeof(char));
+        path2[i] = (char*)malloc(10 * sizeof(char));
+    }
+
+    pathf(root, val1, path1, 0);
+    pathf(root, val2, path2, 0);
+
+    
+    int i = 0, j = 0;
+    while (path1[i][0] != '\0' && path2[j][0] != '\0') {
+        if (strcmp(path1[i], path2[j]) == 0) {
+            printf("%s", path1[i]);
+            if (path1[i + 1][0] != '\0' || path2[j + 1][0] != '\0') {
+                printf(", ");
+            }
+            i++;
+            j++;
+        }  else {
+            j++;
+        }
+    }
+    printf("\n");
+
+    
+}
+
 int main() {
     struct Node* root = node("Bangalore");
 
-    root->left = node("Bangalore East");
-    root->right = node("Bangalore West");
+    root->left = node("Bangalore west");
+    root->right = node("Bangalore east");
 
     root->left->left = node("C");
     root->left->right = node("D");
@@ -54,30 +85,16 @@ int main() {
     root->left->right->left = node("56007");
     root->left->right->right = node("56008");
 
-    char val[2][10];
+    char value1[10];
+    char value2[10];
+
     printf("Enter region code 1: ");
-    scanf("%s", val[0]);
+    scanf("%s", value1);
     printf("Enter region code 2: ");
-    scanf("%s", val[1]);
+    scanf("%s", value2);
 
-    char* path[2][10];
-    int l[2] = {0};
+    
+    pathc(root, value1, value2);
 
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 10; j++) {
-            path[i][j] = (char*)malloc(10 * sizeof(char));
-        }
-    }
-
-    for (int i = 0; i < 2; i++) {
-        pathf(root, val[i], path[i], &l[i]);
-        printf("Path for %s: ", val[i]);
-        for (int j = 0; j < l[i]; j++) {
-            printf("%s", path[i][j]);
-            if (j != l[i] - 1) {
-                printf(", ");
-            }
-        }
-        printf("\n");
-    }
+    return 0;
 }
